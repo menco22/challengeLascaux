@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title id="title"></title>
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <link rel="stylesheet" href="CSSfiles/detailsStyle.css">
+  <script src="bootstrap.min.js"></script>
+</head>
+<body>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">CineMille</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="home.html">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="info.html">About Us</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+	</header>
+	<div class="contanier">
+		<h1 id="filmTitle" class="text-center"></h1>
+		  <div class="row">
+			<div class="col-4">
+				<img id="poster" src="" alt="locandina" height="500" width="350">
+			</div>
+			   <div class="col-8">
+				<h3 id="durata" ></h3>
+				<h3 id="descrizione" style="text-align:justify"></h3>
+				<h4 id ="date"></h4>
+				<!--  <a href="Home.html"><button>Back</button></a>-->
+			</div>
+		   </div>
+	</div>
+<!--  -->
+</body>
+<script type="text/javascript">
+window.onload = function() {
+    getFilmDetail() ;
+};
+function getFilmDetail(){
+const urlParams = new URLSearchParams(window.location.search);
+const filmId = urlParams.get('filmId');
+
+fetch(`https://api.themoviedb.org/3/movie/${filmId}?api_key=12424b3d856def3148390d637577ffe6`)
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+	const title = document.getElementById('title');
+	title.textContent = `${data.title}`;
+	const filmTitle = document.getElementById('filmTitle');
+	filmTitle.textContent = `${data.title}`;
+	const img = document.getElementById('poster');
+	img.src = `https://image.tmdb.org/t/p/w500//${data.poster_path}`;
+	const durata = document.getElementById('durata');
+	durata.textContent = `Running Time: ${data.runtime} min`;
+    const filmTitle2 = document.getElementById('descrizione');
+    filmTitle2.textContent = `${data.overview}`;
+    let releaseDate = new Date(data.release_date);
+    let newDate = new Date(releaseDate);
+    newDate.setDate(releaseDate.getDate() + 21);
+    const date = document.getElementById('date');
+    date.textContent = `Available from ${releaseDate.toLocaleDateString()} to ${newDate.toLocaleDateString()}`;
+  })
+  .catch(error => console.error(error));
+}
+</script>
+</html>

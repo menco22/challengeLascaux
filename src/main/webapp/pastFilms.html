@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Past Films</title>
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="bootstrap.min.js"></script>
+</head>
+<body>
+		<header>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">CineMille</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="home.html">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="info.html">About Us</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+	</header>
+	 <div class="container" >
+      <h1 id="past-films">Past films</h1>
+      <a href="home.html"><button>GO BACK</button></a>
+				<table class="table table-striped table-bordered" id="past-films">
+        <thead >
+          <tr >
+            <th scope="col">Title</th>
+            <th scope="col">Release date</th>
+            <th scope="col">Evaluation</th>
+            <th scope="col">Learn more</th>
+          </tr>
+        </thead>
+        <tbody id="past-films-list">
+        </tbody>
+      </table>
+      
+    </div>
+</body>
+<script type="text/javascript">
+window.onload = function() {
+    getPastFilms() ;
+};
+function getPastFilms(){
+	const pastFilm = document.getElementById('past-films');
+	pastFilm.style.display="block";
+	fetch('https://api.themoviedb.org/3/movie/now_playing?api_key=12424b3d856def3148390d637577ffe6')
+	.then(response => response.json())
+	.then(data =>  {  
+				console.log(data);
+				console.log(data.dates);
+			    const film = document.getElementById('films');
+			    //const dateHeading = document.createElement('p');
+			    //dateHeading.textContent = `Those films will be available from ${data.dates.minimum} to ${data.dates.maximum}`;
+			    //films.after(dateHeading);
+	    const filmsList = document.getElementById('past-films-list');
+	    data.results.forEach(film => {
+	    	let today = new Date();
+	    	let releaseDate = new Date(film.release_date);
+	    	let lastDay = new Date(film.release_date);
+	    	lastDay.setDate(releaseDate.getDate() +21);
+	    	if(lastDay<today){
+	      const filmRow = document.createElement('tr');
+	      filmRow.innerHTML = `
+	        <td>${film.title}</td>
+	        <td>${film.release_date}</td>
+	        <td>${film.vote_average}</td>
+	        <td><a href="details.html?filmId=${film.id}"><button>Details</button></a></td>
+	      `;
+	      filmsList.appendChild(filmRow);
+	    	}
+	    });
+	})
+	.catch(error => console.error(error));
+}
+</script>
+</html>
